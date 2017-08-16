@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="pt-br">
+	<head>
+		<meta charset="utf-8"/>
+		<script src="./js/jquery.min.js"></script>
+		<script>
+			$(function(){
+				function Produto(id, nome, valor){
+					return {"id":id, "nome": nome, "valorUnitario": valor};
+				}
+		
+				function pesquisaPorId(vetor, objId){
+					var objetoEscolhido; 
+					$.each(vetor, function(ind, objeto){
+						if(objeto.id == objId){
+							objetoEscolhido = objeto;
+						}
+					});
+					return objetoEscolhido;
+				}
+				var cardapioArray = [
+									Produto(1, "Espresso", 4)
+									, Produto(2, "Capuccino", 6)
+									, Produto(3, "Chococcino", 8)
+									, Produto(4, "Moccha", 8)
+									, Produto(5, "Fraputino", 7.5)
+									, Produto(6, "Suco de Laranja", 9)
+									, Produto(7, "Espresso Ristreto", 7)
+									]
+				$.each(cardapioArray, function(indice,produto){
+					$("#cardapio")
+						.append(
+							$("<tr />")
+									.attr("id", produto.id)
+									.append($("<td />").text(produto.nome))
+									.append($("<td />").text(produto.valorUnitario))
+						);
+				})					 
+				/*
+				for(i=0; i<cardapioArray.length; i++){
+					var produto = cardapioArray[i];
+					$("#cardapio")
+						.append(
+							$("<tr />")
+									.append($("<td />").text(produto.nome))
+									.append($("<td />").text(produto.valorUnitario))
+						)
+				}
+				*/
+				$("#cardapio").on("click","tr",function(){
+					var produtoEscolhido = pesquisaPorId(
+						cardapioArray,$(this).attr("id"));
+					alert(produtoEscolhido);
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<h1>Cafeteria GaHel</h1>
+		<table id="cardapio">
+			<tr>
+				<th>Nome</th>
+				<th>Preço unitario</th>
+			</tr>
+		</table>
+		<h2>Pedido</h2>
+		<table id="pedido">
+			<thead>
+				<tr>
+					<th>Nome</th>
+					<th>Quantidade</th>
+					<th>Valor Unitário</th>
+					<th>Valor Total por Item</th>
+				</tr>
+			</thead>
+			<tfoot>
+				<tr>
+					<th colspan="3">Total</th>
+					<td id="valorTotal">0</td>
+					
+				</tr>
+			</tfoot>
+		</table>
+	</body>
+</html>
