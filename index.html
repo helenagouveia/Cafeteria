@@ -1,85 +1,186 @@
-<!doctype html>
-<html lang="pt-br">
-	<head>
-		<meta charset="utf-8"/>
-		<script src="./js/jquery.min.js"></script>
+ <!DOCTYPE html>
+	<html>
+		<head>
+		<title>Cafeteria da cidade</title>
+		<script src="./jquery-3.2.1.js"></script>
+		<script src="./produtos.js"></script>
 		<script>
 			$(function(){
-				function Produto(id, nome, valor){
-					return {"id":id, "nome": nome, "valorUnitario": valor};
-				}
-		
-				function pesquisaPorId(vetor, objId){
-					var objetoEscolhido; 
-					$.each(vetor, function(ind, objeto){
-						if(objeto.id == objId){
-							objetoEscolhido = objeto;
-						}
-					});
-					return objetoEscolhido;
-				}
-				var cardapioArray = [
-									Produto(1, "Espresso", 4)
-									, Produto(2, "Capuccino", 6)
-									, Produto(3, "Chococcino", 8)
-									, Produto(4, "Moccha", 8)
-									, Produto(5, "Fraputino", 7.5)
-									, Produto(6, "Suco de Laranja", 9)
-									, Produto(7, "Espresso Ristreto", 7)
-									]
-				$.each(cardapioArray, function(indice,produto){
-					$("#cardapio")
-						.append(
-							$("<tr />")
-									.attr("id", produto.id)
-									.append($("<td />").text(produto.nome))
-									.append($("<td />").text(produto.valorUnitario))
-						);
-				})					 
-				/*
-				for(i=0; i<cardapioArray.length; i++){
-					var produto = cardapioArray[i];
-					$("#cardapio")
-						.append(
-							$("<tr />")
-									.append($("<td />").text(produto.nome))
-									.append($("<td />").text(produto.valorUnitario))
-						)
-				}
-				*/
-				$("#cardapio").on("click","tr",function(){
-					var produtoEscolhido = pesquisaPorId(
-						cardapioArray,$(this).attr("id"));
-					alert(produtoEscolhido);
-				});
+				plotarCardapio();
+					adicionarPedido({id:1, nome:"Expresso",preco:4.00});
+					adicionarPedido({id:1, nome:"Expresso",preco:4.00});
+				console.log(
+					pedido
+				);
+				//remocao({id:1, nome:"Expresso",preco:4.00});
+				remocao({id:1, nome:"Expresso",preco:4.00});
+				plotarPedido();
+				botaoDeAdc();
+				botaoDeremv();
+				existeCardapio({id:1, nome:"Expresso",preco:4.00});
+				progBtnAddCard();
 			});
+	
+			function plotarCardapio(){
+			$('.produto').html('');
+				$.each(produtos,function(indice,produto){
+				$('.produto')
+				.append("<tr><td>"+produto.nome+"</td><td>"+produto.preco+"</td><td>"+ "<button id=\"prod_"+produto.id+"\"class=\"adicionar\">+</button></td></tr>")
+				});
+			}
+			
+			var pedido = [];
+			
+			function plotarPedido(){
+			$('.pedid').html('');
+				$.each(pedido, function(indice, item){
+				$('.pedid')
+				.append("<tr><td>"+item.quantidade+"</td><td>"+item.produto.nome+"</td><td>"+item.produto.preco+"</td><td>"+"<button id=\"item_"+item.produto.id+"\"class=\"remover\">-</button></td></tr>")
+				});
+			}
+
+			function botaoDeAdc(){
+				$('.adicionar').bind('click', function(){
+					var id = $(this).attr('id');
+					id = id.split('_');
+					id = id[1];
+					var produtoDoId = prodporid(id);
+					adicionarPedido(produtoDoId);
+				});
+			}
+			
+			function botaoDeremv(){
+				$(document).on('click','.remover', function(){
+					var id = $(this).attr('id');
+					id = id.split('_');
+					id = id[1];
+					var produtoDoId = prodporid(id);
+					remocao(produtoDoId);
+				});
+			}
+			
+			
+			// funcao que verifica se ja foi adicionado, se ja, so vai incrementar na quantidade
+			
+			function existeProduto(prod){
+			
+				var existeItem = false;
+				
+				$.each(pedido, function(indice, item){
+					if(item.produto.id==prod.id)
+					{
+						existeItem = indice;
+						
+						return null;
+					}
+				});
+				return existeItem;
+			}
+			
+			function existeCardapio(prod){
+			
+				var existeProduto = false;
+				
+				$.each(produtos, function(indice, produto){
+					if(produto.nome==prod.nome)
+					{
+						existeItem = indice;
+						
+						return null;
+					}
+				});
+				return existeProduto;
+			}
+			
+			//adicionar se nao tiver
+			function adicionarPedido(prod){
+			var existe = existeProduto(prod);
+				if(existe === false)/* 3 iguais compara valor e tipo */
+					pedido.push({
+						produto:prod, quantidade:1
+					});
+				else
+					pedido[existe].quantidade++;
+				plotarPedido();
+			}
+			
+			function prodporid(id){
+			var retorno=null;
+				$.each(produtos,function(indice,produto){
+					if(id==produto.id)
+					{
+					 retorno=produto;
+					}
+				});
+				return retorno;
+			}
+			//excluir e remover cuidados
+			
+			function remocao(prod){
+				var excluir = existeProduto(prod);
+				if(pedido[excluir].quantidade>1)
+				{
+					pedido[excluir].quantidade--;
+				}
+				else 
+					pedido.splice(excluir, 1);
+					plotarPedido();
+			}
+			
+			function adicionarNoCardapio(prod){
+			var existe = existeProduto(prod);
+				if(existe === false)/* 3 iguais compara valor e tipo */
+					produtos.push(prod);
+				plotarCardapio();
+			}
+			
+			
+			function progBtnAddCard(){
+				$('#btn').click(function(){
+				var id = produtos[produtos.length-1].id+1;
+				var nome = $('#nome').val();
+				var preco = $('#preco').val();
+				
+				var p = {id: id, nome: nome, preco: preco};
+				adicionarNoCardapio(p);
+				});
+			}
 		</script>
-	</head>
-	<body>
-		<h1>Cafeteria GaHel</h1>
-		<table id="cardapio">
-			<tr>
-				<th>Nome</th>
-				<th>Preço unitario</th>
-			</tr>
-		</table>
-		<h2>Pedido</h2>
-		<table id="pedido">
-			<thead>
-				<tr>
-					<th>Nome</th>
-					<th>Quantidade</th>
-					<th>Valor Unitário</th>
-					<th>Valor Total por Item</th>
-				</tr>
-			</thead>
-			<tfoot>
-				<tr>
-					<th colspan="3">Total</th>
-					<td id="valorTotal">0</td>
+		</head>
+		<body>
+
+			Produto <input type="text" name="nome" id="nome" />
+			Preço do Produto <input type="number" name="preco" id="preco" />
+				<button id="btn"> Adicionar </button>
+
+			<table border="1">
+				<thead>
+					<tr>
+						<th>Nomes</th>
+						<th>Preços</th>
+						<th></th>
+					</tr>		
+				</thead>
+				<tbody class="produto">
+
+				</tbody>	
+			</table>
+			<table border="1" >
+				<thead>
+					<tr>
+						<th>Quantidade</th>
+						<th>Produto</th>
+						<th>Preço Unitário</th>
+						<th></th>
+					</tr>		
+				</thead>
+				<tbody class="pedid">
 					
-				</tr>
-			</tfoot>
-		</table>
-	</body>
-</html>
+				</tbody>
+				<tfoot>
+					<th>Total:</th>
+				<tfoot>
+			</table>
+			
+		</body>
+	</html>
