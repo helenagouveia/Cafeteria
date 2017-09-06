@@ -1,7 +1,9 @@
  <!DOCTYPE html>
 	<html>
 		<head>
-		<title>Cafeteria da cidade</title>
+		<title>Terra do Café</title>
+		<link rel="stylesheet" type="text/css" href="css.css"/>
+		<link rel="shortcut icon" href="https://lh4.googleusercontent.com/-9PkouyLVBeQ/UkL11YAMkPI/AAAAAAAAAAs/-ii5Wvc0oqE/w293-h295/favicon.png" />
 		<script src="./jquery-3.2.1.js"></script>
 		<script src="./produtos.js"></script>
 		<script>
@@ -148,12 +150,11 @@
 		</script>
 		</head>
 		<body>
-
-			Produto <input type="text" name="nome" id="nome" />
-			Preço do Produto <input type="number" name="preco" id="preco" />
-				<button id="btn"> Adicionar </button>
-
-			<table border="1">
+			<img src="http://imagehost7.online-image-editor.com/oie_upload/images/611135773yD13/W4R79zCj57sw.png" class="logo"/>
+				<br/><input type="text" name="nome" id="nome" placeholder="Adicionar Produto"/>
+				<input type="number" name="preco" id="preco" placeholder="Preço do Produto"/>
+				<button id="btn"> Adicionar </button><br/>
+			<br/><table class="tb" border=1>
 				<thead>
 					<tr>
 						<th>Nomes</th>
@@ -161,11 +162,9 @@
 						<th></th>
 					</tr>		
 				</thead>
-				<tbody class="produto">
-
-				</tbody>	
+				<tbody class="produto"></tbody>	
 			</table>
-			<table border="1" >
+			<table class="tb" border=1>
 				<thead>
 					<tr>
 						<th>Quantidade</th>
@@ -174,13 +173,10 @@
 						<th></th>
 					</tr>		
 				</thead>
-				<tbody class="pedid">
-					
-				</tbody>
+				<tbody class="pedid"></tbody>
 				<tfoot>
 					<th>Total:</th>
 				<tfoot>
 			</table>
-			
 		</body>
 	</html>
